@@ -18,6 +18,7 @@ except FileNotFoundError:
     sys.stderr = open(args.output, 'a')
     print(f'No se encontró el archivo {args.file}.', file=sys.stderr)
     sys.stderr.close()
+    print(f'No se encontró el archivo {args.file}.')
     
 
 words = content.split()
