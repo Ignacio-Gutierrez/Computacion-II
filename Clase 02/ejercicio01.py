@@ -16,12 +16,14 @@ r_ans = cmath.sqrt(args.n)
 
 if args.root:
     rt = os.fork()
-    
+                                   
     if rt > 0:
         print(f'La raíz positiva es: {r_ans}')
+        print('SOY PADRE (PID: %d -- PPID: %d)' % (os.getpid(), os.getppid()))
 
     elif rt == 0:
         print(f'La raíz negativa es: {-r_ans}')
+        print('SOY HIJO (PID: %d -- PPID: %d)' % (os.getpid(), os.getppid()))
 
 if not args.root:
     print(f'La raíz positiva es: {r_ans}')
