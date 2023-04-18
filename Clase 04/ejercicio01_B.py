@@ -16,27 +16,27 @@ matrix2 = args.m2
 fifo_00 = '/tmp/my_fifo.'
 
 def child_01():
-    fifo = open(fifo_00, 'w')
+    fifo = open(fifo_00, 'a')
     mat0 = str(matrix1[0]*matrix2[0]+matrix1[2]*matrix2[1])
-    fifo.write(mat0 + '\n'  )
+    fifo.write(mat0)
     fifo.close()
 
 def child_02():
     fifo = open(fifo_00, 'a')
     mat1 = str(matrix1[1]*matrix2[0]+matrix1[3]*matrix2[1])
-    fifo.write(mat1 + '\n')
+    fifo.write(mat1)
     fifo.close()
     
 def child_03():
     fifo = open(fifo_00, 'a')
     mat2 = str(matrix1[0]*matrix2[2]+matrix1[2]*matrix2[3])
-    fifo.write(mat2 + '\n')
+    fifo.write(mat2)
     fifo.close()
 
 def child_04():
     fifo = open(fifo_00, 'a')
     mat3 = str(matrix1[1]*matrix2[2]+matrix1[3]*matrix2[3])
-    fifo.write(mat3 + '\n')
+    fifo.write(mat3)
     fifo.close()
 
 def parent():
@@ -46,12 +46,15 @@ def parent():
 if not os.path.exists(fifo_00):
     os.mkfifo(fifo_00)
 
-pid = os.fork()
+pid_list = []
+for i, func in enumerate([child_01, child_02, child_03, child_04]):
+    pid = os.fork()
+    if pid == 0: # proceso hijo
+        func()
+        os._exit(0)
+    else: # proceso padre
+        parent()
 
-if pid != 0:
-    parent()
-else:
-    child_01()
-    child_02()
-    child_03()
-    child_04()
+# Espera a que todos los procesos hijo terminen su trabajo
+for pid in pid_list:
+    os.waitpid(pid, 0)
