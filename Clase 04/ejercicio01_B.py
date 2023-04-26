@@ -49,6 +49,8 @@ def parent():
 
     data = [data1, data2, data3, data4]
 
+    m00 = m01 = m10 = m11 = None
+
     for d in data:
         if d[:3] == '00:':
             m00 = d[3:]
