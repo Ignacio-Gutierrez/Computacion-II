@@ -28,7 +28,7 @@ def proof_of_work(block):
     Function that tries different values of nonce to get a hash
     that satisfies our difficulty criteria.
     """
-    difficulty = 6
+    difficulty = 3
 
     computed_hash = block.compute_hash()
     while not computed_hash.startswith('0' * difficulty):
@@ -46,12 +46,12 @@ def handle_signal(signum, frame):
         print(nonce)
         exit(0)
 
+signal.signal(signal.SIGUSR1, handle_signal)
 
 for i in range(2):
     pid = os.fork()
     if pid == 0:
         print(f'{os.getpid()} hijo DE {os.getppid()}')
-        record = os.getpid()
 
         b = NoBlock(seed='La semilla que quiera', nonce=0)
         h = b.compute_hash()
@@ -62,11 +62,9 @@ for i in range(2):
         os.kill(os.getppid(), signal.SIGUSR1)
 
         fifo = open(fifo_hash, 'w')
-        fifo.write(f'El nonce encontrado es: {nonce_str}\nLo encontro: {record}')
+        fifo.write(f'El nonce encontrado es: {nonce_str}\nLo encontro: {os.getpid()}')
         fifo.close()
 
         exit()
-        
 
-signal.signal(signal.SIGUSR1, handle_signal)
 os.wait()

@@ -46,13 +46,12 @@ def handle_signal(signum, frame):
     os.close(r)
     exit()
 
-
+signal.signal(signal.SIGUSR1, handle_signal)
 
 for i in range(2):
     pid = os.fork()
     if pid == 0:
         print(f'{os.getpid()} hijo DE {os.getppid()}')
-        record = os.getpid()
 
         b = NoBlock(seed='La semilla que quiera', nonce=0)
         h = b.compute_hash()
@@ -62,7 +61,7 @@ for i in range(2):
 
         os.kill(os.getppid(), signal.SIGUSR1)
         
-        data = f'El nonce encontrado es: {nonce_str}\nLo encontro: {record}'
+        data = f'El nonce encontrado es: {nonce_str}\nLo encontro: {os.getpid()}'
 
         try:
             os.close(r)
@@ -73,6 +72,4 @@ for i in range(2):
 
         exit()
         
-
-signal.signal(signal.SIGUSR1, handle_signal)
 os.wait()
