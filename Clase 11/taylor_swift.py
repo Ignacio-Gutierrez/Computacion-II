@@ -20,7 +20,7 @@ if __name__ =='__main__':
     th_l =[]
 
     for i in range(n):
-        th1 = th.Thread(target= taylor, args=(n,x))
+        th1 = th.Thread(target= taylor, args=(i,x))
         th1.start()
         th_l.append(th1)
 
@@ -35,3 +35,5 @@ if __name__ =='__main__':
     print(f'X = {s}')
     print(f'Reference value: {math.sin(x)}')
     print(f'Error: {abs(s-math.sin(x))}')
+
+#Integrantes: Pablo Herrera, Ignacio Gutierrez
